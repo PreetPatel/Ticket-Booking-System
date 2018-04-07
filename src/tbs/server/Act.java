@@ -54,7 +54,6 @@ public class Act {
         } else {
             newActID = (Integer.parseInt(TBSServerImpl.getActList().get(TBSServerImpl.getActList().size() - 1).getActID()) + 1);
         }
-
         Act newAct = new Act(title,artistID,minutesDuration,Integer.toString(newActID));
         TBSServerImpl.getActList().add(newAct);
         return newAct.getActID();

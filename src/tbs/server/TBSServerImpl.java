@@ -89,7 +89,7 @@ public class TBSServerImpl implements TBSServer {
     public List<String> getTicketIDsForPerformance(String performanceID) {
         List<String> TicketIDsForPerformance = new ArrayList<>();
         for (Ticket e: Tickets) {
-            if(e.getPerformanceID() == performanceID) {
+            if(e.getPerformanceID().equals(performanceID)) {
                 TicketIDsForPerformance.add(e.getTicketID());
             }
         }

@@ -18,20 +18,6 @@ public class Artist extends TBSServerImpl {//implements Comparable<Artist> {
         return _ID;
     }
 
-    /*public int compareTo(Artist o) {
-        if (_Name.compareTo(o._Name) < 1) {
-            return -1;
-        } else if (_Name.compareTo(o._Name) > 1) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }*/
-
-    public boolean equals(Artist o) {
-        return _Name.toLowerCase().equals(o._Name.toLowerCase());
-    }
-
     public static boolean doesArtistExist(String name) {
         for (Artist e: TBSServerImpl.getArtistList()) {
             if (e.getName().equals(name)) {

@@ -75,11 +75,7 @@ public class Performance{
 
     public  boolean isSeatValid(int row, int position) {
         int maxRows = Theatre.getTheatre(_TheatreID).getRows();
-        if (row > maxRows || position > maxRows) {
-            return false;
-        } else {
-            return true;
-        }
+        return row <= maxRows && position <= maxRows;
 
     }
 

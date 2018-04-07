@@ -39,7 +39,7 @@ public class Ticket {
 
     public static boolean isTicketAvailable(int row, int position, String performanceID) {
         for (Ticket e: TBSServerImpl.getTicketList()) {
-            if ((e.getPosition() == position) && (e.getRow() == row) && (e.getPerformanceID() == performanceID)) {
+            if ((e.getPosition() == position) && (e.getRow() == row) && (e.getPerformanceID().equals(performanceID))) {
                 return false;
             }
         }
@@ -63,7 +63,7 @@ public class Ticket {
     public static ArrayList<Ticket> getTicketsForPerformance(String performanceID) {
         ArrayList<Ticket> ticketsForPerformance = new ArrayList<>();
         for (Ticket e: TBSServerImpl.getTicketList()) {
-            if(e.getPerformanceID() == performanceID) {
+            if(e.getPerformanceID().equals(performanceID)) {
                 ticketsForPerformance.add(e);
             }
         }
