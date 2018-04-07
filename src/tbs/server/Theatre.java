@@ -1,10 +1,13 @@
 package tbs.server;
 
+import java.util.ArrayList;
+
 public class Theatre implements Comparable<Theatre>{
 
     private String _ID;
     private int _Rows;
     private int _FloorArea;
+    //private ArrayList<Seat> _Seats = new ArrayList<>();
 
     public Theatre(String ID, int Rows, int FloorArea) {
         _ID = ID;
@@ -25,6 +28,15 @@ public class Theatre implements Comparable<Theatre>{
     public String getID() {
         return _ID;
     }
+    public int getRows() {
+        return _Rows;
+    }
+    public int getFloorArea() {
+        return _FloorArea;
+    }
+    /*public ArrayList<Seat> getSeatsList() {
+        return _Seats;
+    }*/
 
     public static boolean doesTheatreExist(String ID) {
         for (Theatre e: TBSServerImpl.getTheatreList()) {
@@ -33,6 +45,15 @@ public class Theatre implements Comparable<Theatre>{
             }
         }
         return false;
+    }
+
+    public static Theatre getTheatre(String ID) {
+        for (Theatre e: TBSServerImpl.getTheatreList()) {
+            if (e.getID().equals(ID)) {
+                return e;
+            }
+        }
+        return null;
     }
 }
 
