@@ -158,9 +158,9 @@ public class CLI {
 		System.out.println("}");
 
 		System.out.println("////////////////////////////////////////////////////////////////////////////////////////////");
-		System.out.print("Result from sales report for ED Sheeran's World Tour Act is { "); //Results from GetTheatreID
+		System.out.print("Result from sales report for Ed Sheeran's World Tour Act is { \n"); //Results from GetTheatreID
 		List<String> salesReport1 = server.salesReport(actID2);
-		for(String e: salesReport1) { System.out.print(e + " , "); }
+		for(String e: salesReport1) { System.out.print(e + "\n"); }
 		System.out.println("}");
 
 	}
