@@ -273,19 +273,19 @@ public class CLI3 {
 		
 		// Should return list of performance IDs
 		List<String> pIDs1 = server.getPeformanceIDsForAct(actID7);
-		System.out.println("Expected: List of act IDs");
+		System.out.println("Expected: List of Performance IDs");
 		System.out.println(pIDs1);
 		System.out.println("\n");
 		
 		// Should return list of performance IDs
 		List<String> pIDs2 = server.getPeformanceIDsForAct(actID9);
-		System.out.println("Expected: List of act IDs");
+		System.out.println("Expected: List of Performance IDs");
 		System.out.println(pIDs2);
 		System.out.println("\n");
 		
 		// Should return list of performance IDs
 		List<String> pIDs3 = server.getPeformanceIDsForAct(actID10);
-		System.out.println("Expected: List of act IDs (has no performances scheduled)");
+		System.out.println("Expected: List of Performance IDs (has no performances scheduled)");
 		System.out.println(pIDs3);
 		System.out.println("\n");
 		

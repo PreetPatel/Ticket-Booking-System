@@ -5,12 +5,14 @@ public class Act {
     private String _ArtistID;
     private int _MinutesDuration;
     private String _ActID;
+    private static int _ActIDTracker = 1;
 
     public Act(String title, String artistID, int minutesDuration, String actID) {
         _Title = title;
         _ArtistID = artistID;
         _MinutesDuration = minutesDuration;
         _ActID = actID;
+        _ActIDTracker++;
     }
 
     public Act(String title, String artistID, int minutesDuration) {
@@ -59,13 +61,9 @@ public class Act {
 
     public String addActToList() {
 
-        int newActID;
-        if (TBSServerImpl.getActList().isEmpty()) {
-            newActID = 1;
-        } else {
-            newActID = (Integer.parseInt(TBSServerImpl.getActList().get(TBSServerImpl.getActList().size() - 1).getActID()) + 1);
-        }
-        Act newAct = new Act(_Title,_ArtistID,_MinutesDuration,Integer.toString(newActID));
+        String newActID;
+        newActID = "ACT" + _ActIDTracker;
+        Act newAct = new Act(_Title,_ArtistID,_MinutesDuration,newActID);
         TBSServerImpl.getActList().add(newAct);
         return newAct.getActID();
 

@@ -2,21 +2,25 @@ package tbs.server;
 
 import java.util.ArrayList;
 
-public class Ticket extends Performance{
+public class Ticket extends Performance {
     private String _TicketID;
     private String _Price;
     private int _Row;
     private  int _Position;
-    private String _PerformanceID;
+    private static int _TickerIDTrakcer = 1;
 
 
-    public Ticket(String performanceID, String price, int row, int position, String ticketID) {
+    public Ticket(String performanceID, int row, int position, String ticketID) throws NullPointerException {
         super(performanceID);
-        _Price = price;
         _Row = row;
         _Position = position;
         _TicketID = ticketID;
-        _PerformanceID = performanceID;
+        if (_Row <= (this.getTheatre().getRows() / 2)) {
+            this._Price = this.getPremiumPrice();
+        } else {
+            this._Price = this.getCheapPrice();
+        }
+
     }
 
     public int getRow() {
@@ -34,19 +38,9 @@ public class Ticket extends Performance{
         return _TicketID;
     }
 
-    public String calculatePrice() {
-        if (_Row <= (this.getTheatre().getRows()/2)) {
-            this._Price = this.getPremiumPrice();
-            return this.getPremiumPrice();
-        } else {
-            this._Price = this.getCheapPrice();
-            return this.getCheapPrice();
-        }
-    }
-
     public boolean isTicketAvailable() {
         for (Ticket e: TBSServerImpl.getTicketList()) {
-            if ((e.getPosition() == _Position) && (e.getRow() == _Row) && (e.getPerformanceID().equals(_PerformanceID))) {
+            if ((e.getPosition() == _Position) && (e.getRow() == _Row) && (e.getPerformanceID().equals(this.getPerformanceID()))) {
                 return false;
             }
         }
@@ -54,14 +48,9 @@ public class Ticket extends Performance{
     }
 
     public String addTicketToList() {
-
-        int newTicketID;
-        if (TBSServerImpl.getTicketList().isEmpty()) {
-            newTicketID = 1;
-        } else {
-            newTicketID = (Integer.parseInt(TBSServerImpl.getTicketList().get(TBSServerImpl.getTicketList().size() - 1).getTicketID()) + 1);
-        }
-        this._TicketID =  Integer.toString(newTicketID);
+        String newTicketID = "TICKET" + _TickerIDTrakcer;
+        _TickerIDTrakcer++;
+        this._TicketID = newTicketID;
         TBSServerImpl.getTicketList().add(this);
         return this.getTicketID();
 
@@ -79,7 +68,7 @@ public class Ticket extends Performance{
 
     public  boolean isSeatValid() {
         int maxRows = this.getTheatre().getRows();
-        return _Row <= maxRows && _Position <= maxRows;
+        return _Row <= maxRows && _Position <= maxRows && _Row > 0 && _Position > 0;
 
     }
 }

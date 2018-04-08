@@ -8,6 +8,7 @@ public class Performance extends Act{
     private String _PremiumPrice;
     private String _CheapPrice;
     private String _PerformanceID;
+    private static int _PerformanceIDTracker = 1;
 
     public Performance(String actID, String theatreID, String startTime, String premiumPrice, String cheapPrice, String performanceID) {
         super(actID);
@@ -18,6 +19,7 @@ public class Performance extends Act{
         _CheapPrice = cheapPrice;
         _PerformanceID = performanceID;
     }
+
     public  Performance(String performanceID) {
         super(null);
         _PerformanceID = performanceID;
@@ -29,10 +31,6 @@ public class Performance extends Act{
     }
     public String getStartTime() {
         return _StartTime;
-    }
-
-    public String getTheatreID() {
-        return _TheatreID;
     }
 
     public String getActID() {
@@ -67,13 +65,9 @@ public class Performance extends Act{
 
     public String addPerformanceToList() {
 
-        int newPerformanceID;
-        if (TBSServerImpl.getPerformanceList().isEmpty()) {
-            newPerformanceID = 1;
-        } else {
-            newPerformanceID = (Integer.parseInt(TBSServerImpl.getPerformanceList().get(TBSServerImpl.getPerformanceList().size() - 1).getPerformanceID()) + 1);
-        }
-        this._PerformanceID = Integer.toString(newPerformanceID);
+        String newPerformanceID = "PERFORMANCE" + _PerformanceIDTracker;
+        _PerformanceIDTracker++;
+        this._PerformanceID = newPerformanceID;
         TBSServerImpl.getPerformanceList().add(this);
         return this.getPerformanceID();
 
@@ -88,9 +82,9 @@ public class Performance extends Act{
         return false;
     }
 
-    public Performance getPerformance() {
-        for (Performance e: TBSServerImpl.getPerformanceList()) {
-            if (e.getPerformanceID().equals(_PerformanceID)) {
+    public Theatre getTheatre() {
+        for (Theatre e: TBSServerImpl.getTheatreList()) {
+            if (e.getID().equals(_TheatreID)) {
                 return e;
             }
         }
@@ -106,13 +100,13 @@ public class Performance extends Act{
         return null;
     }
 
-    public Theatre getTheatre() {
+    public boolean doesTheatreForPerformanceExist() {
         for (Theatre e: TBSServerImpl.getTheatreList()) {
             if (e.getID().equals(_TheatreID)) {
-                return e;
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
     public static ArrayList<Performance> getPerformancesForAct(String actID) {

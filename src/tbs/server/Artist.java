@@ -2,12 +2,14 @@ package tbs.server;
 
 public class Artist {
 
-    String _Name;
-    String _ID;
+    private String _Name;
+    private String _ArtistID;
+    private static int _ArtistIDTracker = 1;
 
     public Artist(String name, String ID) {
         _Name = name;
-        _ID = ID;
+        _ArtistID = ID;
+        _ArtistIDTracker++;
     }
 
     public Artist(String name) {
@@ -18,40 +20,34 @@ public class Artist {
         return _Name;
     }
 
-    public String getID() {
-        return _ID;
+    public String getArtistID() {
+        return _ArtistID;
     }
 
     public boolean doesArtistExist() {
         for (Artist e: TBSServerImpl.getArtistList()) {
-            if (e.getName().equals(_Name)) {
+            if (e.getName().toLowerCase().equals(_Name.toLowerCase())) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean doesArtistExistByID() {
+    public boolean doesNotExistByID() {
         for (Artist e: TBSServerImpl.getArtistList()) {
-            if (e.getID().equals(_ID)) {
-                return true;
+            if (e.getArtistID().equals(_ArtistID)) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
 
     public String addArtistToList() {
-
-            int newArtistID;
-            if (TBSServerImpl.getArtistList().isEmpty()) {
-                newArtistID = 1;
-            } else {
-                newArtistID = (Integer.parseInt(TBSServerImpl.getArtistList().get(TBSServerImpl.getArtistList().size() - 1).getID()) + 1);
-            }
-            Artist newArtist = new Artist(_Name,Integer.toString(newArtistID));
+            String newArtistID = "ARTIST" + _ArtistIDTracker;
+            Artist newArtist = new Artist(_Name,newArtistID);
             TBSServerImpl.getArtistList().add(newArtist);
-            return newArtist.getID();
+            return newArtist.getArtistID();
 
     }
 
