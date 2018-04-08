@@ -70,7 +70,6 @@ public class Performance extends Act{
         this._PerformanceID = newPerformanceID;
         TBSServerImpl.getPerformanceList().add(this);
         return this.getPerformanceID();
-
     }
 
     public boolean doesPerformanceExist() {
