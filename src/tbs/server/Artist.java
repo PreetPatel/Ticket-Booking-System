@@ -1,6 +1,6 @@
 package tbs.server;
 
-public class Artist extends TBSServerImpl {//implements Comparable<Artist> {
+public class Artist {
 
     String _Name;
     String _ID;
@@ -8,6 +8,10 @@ public class Artist extends TBSServerImpl {//implements Comparable<Artist> {
     public Artist(String name, String ID) {
         _Name = name;
         _ID = ID;
+    }
+
+    public Artist(String name) {
+        _Name = name;
     }
 
     public String getName() {
@@ -18,18 +22,18 @@ public class Artist extends TBSServerImpl {//implements Comparable<Artist> {
         return _ID;
     }
 
-    public static boolean doesArtistExist(String name) {
+    public boolean doesArtistExist() {
         for (Artist e: TBSServerImpl.getArtistList()) {
-            if (e.getName().equals(name)) {
+            if (e.getName().equals(_Name)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean doesArtistExistByID(String ID) {
+    public boolean doesArtistExistByID() {
         for (Artist e: TBSServerImpl.getArtistList()) {
-            if (e.getID().equals(ID)) {
+            if (e.getID().equals(_ID)) {
                 return true;
             }
         }
@@ -37,7 +41,7 @@ public class Artist extends TBSServerImpl {//implements Comparable<Artist> {
     }
 
 
-    public static String addArtistToList(String name) {
+    public String addArtistToList() {
 
             int newArtistID;
             if (TBSServerImpl.getArtistList().isEmpty()) {
@@ -45,7 +49,7 @@ public class Artist extends TBSServerImpl {//implements Comparable<Artist> {
             } else {
                 newArtistID = (Integer.parseInt(TBSServerImpl.getArtistList().get(TBSServerImpl.getArtistList().size() - 1).getID()) + 1);
             }
-            Artist newArtist = new Artist(name,Integer.toString(newArtistID));
+            Artist newArtist = new Artist(_Name,Integer.toString(newArtistID));
             TBSServerImpl.getArtistList().add(newArtist);
             return newArtist.getID();
 

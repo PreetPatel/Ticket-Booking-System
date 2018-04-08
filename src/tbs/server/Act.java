@@ -13,6 +13,16 @@ public class Act {
         _ActID = actID;
     }
 
+    public Act(String title, String artistID, int minutesDuration) {
+        _Title = title;
+        _ArtistID = artistID;
+        _MinutesDuration = minutesDuration;
+    }
+
+    public Act(String actID) {
+        _ActID = actID;
+    }
+
     public String getTitle() {
         return _Title;
     }
@@ -22,14 +32,15 @@ public class Act {
     public String getArtistIDForAct() {
         return _ArtistID;
     }
-    public int getDurationOfAct() {
-        return _MinutesDuration;
+
+    public boolean equals(Act o) {
+        return (o.getActID().equals(_ActID));
     }
 
-    public static boolean doesSameActByArtistExist(String title, String artistID) {
+    public boolean doesSameActByArtistExist() {
         for (Act e: TBSServerImpl.getActList()) {
-            if (e.getArtistIDForAct().equals(artistID)) {
-                if (e.getTitle().equals(title)) {
+            if (e.getArtistIDForAct().equals(_ArtistID)) {
+                if (e.getTitle().equals(_Title)) {
                     return true;
                 }
             }
@@ -37,16 +48,16 @@ public class Act {
         return false;
     }
 
-    public static boolean doesActExist(String ID) {
+    public boolean doesActExist() {
         for (Act e: TBSServerImpl.getActList()) {
-            if (e.getActID().equals(ID)) {
+            if (e.getActID().equals(_ActID)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static String addActToList(String title, String artistID, int minutesDuration) {
+    public String addActToList() {
 
         int newActID;
         if (TBSServerImpl.getActList().isEmpty()) {
@@ -54,7 +65,7 @@ public class Act {
         } else {
             newActID = (Integer.parseInt(TBSServerImpl.getActList().get(TBSServerImpl.getActList().size() - 1).getActID()) + 1);
         }
-        Act newAct = new Act(title,artistID,minutesDuration,Integer.toString(newActID));
+        Act newAct = new Act(_Title,_ArtistID,_MinutesDuration,Integer.toString(newActID));
         TBSServerImpl.getActList().add(newAct);
         return newAct.getActID();
 

@@ -1,7 +1,7 @@
 package tbs.server;
 import java.util.ArrayList;
 
-public class Performance{
+public class Performance extends Act{
     private String _ActID;
     private String _TheatreID;
     private String _StartTime;
@@ -10,12 +10,18 @@ public class Performance{
     private String _PerformanceID;
 
     public Performance(String actID, String theatreID, String startTime, String premiumPrice, String cheapPrice, String performanceID) {
+        super(actID);
         _ActID = actID;
         _TheatreID = theatreID;
         _StartTime = startTime;
         _PremiumPrice = premiumPrice;
         _CheapPrice = cheapPrice;
         _PerformanceID = performanceID;
+    }
+    public  Performance(String performanceID) {
+        super(null);
+        _PerformanceID = performanceID;
+        _TheatreID = this.getTheatreIDforPerformance();
     }
 
     public String getPerformanceID() {
@@ -33,15 +39,33 @@ public class Performance{
         return _ActID;
     }
 
-    public static boolean checkDate(String startTime) {
-        return startTime.matches("([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2})");
+    public boolean checkDate() {
+        return _StartTime.matches("([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2})");
     }
 
-    public static boolean checkPrices(String premiumPrice, String cheapPrice) {
-        return (premiumPrice.matches("^\\$(([1-9]\\d{0,2}(,\\d{3})*)|(([1-9]\\d*)?\\d))") && cheapPrice.matches("^\\$(([1-9]\\d{0,2}(,\\d{3})*)|(([1-9]\\d*)?\\d))"));
+    public boolean checkPrices() throws NullPointerException {
+        return (_PremiumPrice.matches("^\\$(([1-9]\\d{0,2}(,\\d{3})*)|(([1-9]\\d*)?\\d))") && _CheapPrice.matches("^\\$(([1-9]\\d{0,2}(,\\d{3})*)|(([1-9]\\d*)?\\d))"));
     }
 
-    public static String addPerformanceToList(String actID, String theatreID, String startTimeStr, String premiumPriceStr, String cheapSeatsStr) {
+    public String getCheapPrice() {
+        for (Performance e: TBSServerImpl.getPerformanceList()) {
+            if (e._PerformanceID.equals(_PerformanceID)) {
+                return e._CheapPrice;
+            }
+        }
+        return null;
+    }
+
+    public String getPremiumPrice() {
+        for (Performance e: TBSServerImpl.getPerformanceList()) {
+            if (e._PerformanceID.equals(_PerformanceID)) {
+                return e._PremiumPrice;
+            }
+        }
+        return null;
+    }
+
+    public String addPerformanceToList() {
 
         int newPerformanceID;
         if (TBSServerImpl.getPerformanceList().isEmpty()) {
@@ -49,42 +73,46 @@ public class Performance{
         } else {
             newPerformanceID = (Integer.parseInt(TBSServerImpl.getPerformanceList().get(TBSServerImpl.getPerformanceList().size() - 1).getPerformanceID()) + 1);
         }
-        Performance newPerformance = new Performance(actID,theatreID,startTimeStr,premiumPriceStr,cheapSeatsStr,Integer.toString(newPerformanceID));
-        TBSServerImpl.getPerformanceList().add(newPerformance);
-        return newPerformance.getPerformanceID();
+        this._PerformanceID = Integer.toString(newPerformanceID);
+        TBSServerImpl.getPerformanceList().add(this);
+        return this.getPerformanceID();
 
     }
 
-    public static boolean doesPerformanceExist(String ID) {
+    public boolean doesPerformanceExist() {
         for (Performance e: TBSServerImpl.getPerformanceList()) {
-            if (e.getPerformanceID().equals(ID)) {
+            if (e.getPerformanceID().equals(_PerformanceID)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static Performance getPerformance(String performanceID) {
+    public Performance getPerformance() {
         for (Performance e: TBSServerImpl.getPerformanceList()) {
-            if (e.getPerformanceID().equals(performanceID)) {
+            if (e.getPerformanceID().equals(_PerformanceID)) {
                 return e;
             }
         }
         return null;
     }
 
-    public  boolean isSeatValid(int row, int position) {
-        int maxRows = Theatre.getTheatre(_TheatreID).getRows();
-        return row <= maxRows && position <= maxRows;
-
+    public String getTheatreIDforPerformance() {
+        for (Performance e: TBSServerImpl.getPerformanceList()) {
+            if (e._PerformanceID.equals(_PerformanceID)) {
+                return e._TheatreID;
+            }
+        }
+        return null;
     }
 
-    public String getPrice(int row) {
-        if (row <= (Theatre.getTheatre(_TheatreID).getRows()/2)) {
-            return _PremiumPrice;
-        } else {
-            return _CheapPrice;
+    public Theatre getTheatre() {
+        for (Theatre e: TBSServerImpl.getTheatreList()) {
+            if (e.getID().equals(_TheatreID)) {
+                return e;
+            }
         }
+        return null;
     }
 
     public static ArrayList<Performance> getPerformancesForAct(String actID) {
@@ -99,6 +127,7 @@ public class Performance{
 
     public int[] getTotalSalesReport() {
         int[] ticketSales = {0,0};
+
         for (Ticket e: Ticket.getTicketsForPerformance(_PerformanceID)) {
             ticketSales[0] += Integer.parseInt(e.getTicketPrice().substring(1));
             ticketSales[1]++;
