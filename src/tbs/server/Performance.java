@@ -37,7 +37,7 @@ public class Performance extends Act{
         return _ActID;
     }
 
-    public boolean checkDate() {
+    public boolean checkDate() throws NullPointerException{
         return _StartTime.matches("([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2})");
     }
 

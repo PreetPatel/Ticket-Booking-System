@@ -194,7 +194,7 @@ public class CLI {
         // -=-=-=-=-=-=-=-=-=- // addArtist // -=-=-=-=-=-=-=-=-=- //
         String ArtistID1 = server.addArtist("Bon Jovi");
         System.out.print("Expected: an ID \nGot     : " + ArtistID1 + "\n-=-=-=-\n");
-        String ArtistID2 = server.addArtist("Ed Sheeran");
+        String ArtistID2 = server.addArtist("Sheeran");
         System.out.print("Expected: an ID \nGot     : " + ArtistID2 + "\n-=-=-=-\n");
         String ArtistID3 = server.addArtist("Kanye West");
         System.out.print("Expected: an ID \nGot     : " + ArtistID3 + "\n-=-=-=-\n");

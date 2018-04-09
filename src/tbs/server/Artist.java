@@ -12,10 +12,6 @@ public class Artist {
         _ArtistIDTracker++;
     }
 
-    public Artist(String name) {
-        _Name = name;
-    }
-
     public String getName() {
         return _Name;
     }
@@ -45,9 +41,9 @@ public class Artist {
 
     public String addArtistToList() {
             String newArtistID = "ARTIST" + _ArtistIDTracker;
-            Artist newArtist = new Artist(_Name,newArtistID);
-            TBSServerImpl.getArtistList().add(newArtist);
-            return newArtist.getArtistID();
+            this._ArtistID = newArtistID;
+            TBSServerImpl.getArtistList().add(this);
+            return _ArtistID;
 
     }
 

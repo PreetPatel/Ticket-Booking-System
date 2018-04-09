@@ -228,6 +228,12 @@ public class CLI3 {
 		System.out.println("Expected: Some performance ID");
 		System.out.println("Result from scheduling performance to " + actID9 + " is {" + schedule13 + "}");
 		System.out.println("\n");
+
+		// Adds new performance, no errors
+		String schedule14 = server.schedulePerformance(actID9, "T3", null, "$100", "$40");
+		System.out.println("Expected: ERROR Start time is invalid");
+		System.out.println("Result from scheduling performance to " + actID9 + " is {" + schedule14 + "}");
+		System.out.println("\n");
 		
 		
 		/////////////////////////////////// getActIDsForArtist //////////////////////////////////////////////

@@ -15,12 +15,6 @@ public class Act {
         _ActIDTracker++;
     }
 
-    public Act(String title, String artistID, int minutesDuration) {
-        _Title = title;
-        _ArtistID = artistID;
-        _MinutesDuration = minutesDuration;
-    }
-
     public Act(String actID) {
         _ActID = actID;
     }
@@ -63,9 +57,9 @@ public class Act {
 
         String newActID;
         newActID = "ACT" + _ActIDTracker;
-        Act newAct = new Act(_Title,_ArtistID,_MinutesDuration,newActID);
-        TBSServerImpl.getActList().add(newAct);
-        return newAct.getActID();
+        this._ActID = newActID;
+        TBSServerImpl.getActList().add(this);
+        return this.getActID();
 
     }
 

@@ -7,7 +7,7 @@ public class Ticket extends Performance {
     private String _Price;
     private int _Row;
     private  int _Position;
-    private static int _TickerIDTrakcer = 1;
+    private static int _TickerIDTracker = 1;
 
 
     public Ticket(String performanceID, int row, int position, String ticketID) throws NullPointerException {
@@ -15,10 +15,10 @@ public class Ticket extends Performance {
         _Row = row;
         _Position = position;
         _TicketID = ticketID;
-        if (_Row <= (this.getTheatre().getRows() / 2)) {
-            this._Price = this.getPremiumPrice();
+        if (_Row <= (getTheatre().getRows() / 2)) {
+            this._Price = getPremiumPrice();
         } else {
-            this._Price = this.getCheapPrice();
+            this._Price = getCheapPrice();
         }
 
     }
@@ -48,8 +48,8 @@ public class Ticket extends Performance {
     }
 
     public String addTicketToList() {
-        String newTicketID = "TICKET" + _TickerIDTrakcer;
-        _TickerIDTrakcer++;
+        String newTicketID = "TICKET" + _TickerIDTracker;
+        _TickerIDTracker++;
         this._TicketID = newTicketID;
         TBSServerImpl.getTicketList().add(this);
         return this.getTicketID();

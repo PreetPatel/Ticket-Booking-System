@@ -5,12 +5,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class TBSServerImpl implements TBSServer {
+
     private static final List<Theatre> Theatres = new ArrayList<>();
     private static final List<Artist> Artists = new ArrayList<>();
     private static final List<Act> Acts = new ArrayList<>();
     private static final List<Performance> Performances = new ArrayList<>();
     private static final List<Ticket> Tickets = new ArrayList<>();
-
 
     public static List<Artist> getArtistList() {
         return Artists;
@@ -27,6 +27,7 @@ public class TBSServerImpl implements TBSServer {
     public static List<Ticket> getTicketList() {
         return Tickets;
     }
+
 
     @Override
     public List<String> getActIDsForArtist(String artistID) {
@@ -84,6 +85,7 @@ public class TBSServerImpl implements TBSServer {
                 }
             }
         }
+        Collections.sort(performanceIDs);
         return performanceIDs;
     }
 
@@ -94,6 +96,7 @@ public class TBSServerImpl implements TBSServer {
         for (Theatre e: Theatres) {
             result.add(e.getID());
         }
+        Collections.sort(result);
         return result;
     }
 
@@ -109,6 +112,7 @@ public class TBSServerImpl implements TBSServer {
                 }
             }
         }
+        Collections.sort(TicketIDsForPerformance);
         return TicketIDsForPerformance;
     }
 
@@ -150,7 +154,7 @@ public class TBSServerImpl implements TBSServer {
 
     @Override
     public String addAct(String title, String artistID, int minutesDuration) {
-        Act newAct = new Act(title,artistID,minutesDuration);
+        Act newAct = new Act(title,artistID,minutesDuration, null);
         if (artistID == null) {
             return "ERROR Invalid ArtistID";
         } else if (new Artist(null,artistID).doesNotExistByID()) {
@@ -168,7 +172,7 @@ public class TBSServerImpl implements TBSServer {
 
     @Override
     public String addArtist(String name) {
-        Artist newArtist = new Artist(name);
+        Artist newArtist = new Artist(name,null);
         if (name == null || name.trim().isEmpty()) {
             return "ERROR Invalid Name";
         } else if (newArtist.doesArtistExist()) {
