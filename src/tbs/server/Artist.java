@@ -6,9 +6,9 @@ public class Artist {
     private String _ArtistID;
     private static int _ArtistIDTracker = 1;
 
-    public Artist(String name, String ID) {
+    public Artist(String name) {
         _Name = name;
-        _ArtistID = ID;
+        _ArtistID = "ARTIST" + _ArtistIDTracker;
         _ArtistIDTracker++;
     }
 
@@ -20,31 +20,14 @@ public class Artist {
         return _ArtistID;
     }
 
-    public boolean doesArtistExist() {
-        for (Artist e: TBSServerImpl.getArtistList()) {
-            if (e.getName().toLowerCase().equals(_Name.toLowerCase())) {
-                return true;
-            }
-        }
-        return false;
+    @Override
+    public boolean equals(Object obj) {
+        Artist a = (Artist)obj;
+        return _ArtistID.equals(a._ArtistID) || _Name.toLowerCase().equals(a._Name.toLowerCase());
     }
 
-    public boolean doesNotExistByID() {
-        for (Artist e: TBSServerImpl.getArtistList()) {
-            if (e.getArtistID().equals(_ArtistID)) {
-                return false;
-            }
-        }
-        return true;
+    @Override
+    public int hashCode() {
+        return _Name.toLowerCase().hashCode();
     }
-
-
-    public String addArtistToList() {
-            String newArtistID = "ARTIST" + _ArtistIDTracker;
-            this._ArtistID = newArtistID;
-            TBSServerImpl.getArtistList().add(this);
-            return _ArtistID;
-
-    }
-
 }

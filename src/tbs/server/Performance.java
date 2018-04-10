@@ -1,40 +1,38 @@
 package tbs.server;
-import java.util.ArrayList;
 
-public class Performance extends Act{
+public class Performance extends PerformanceCollection{
     private String _ActID;
-    private String _TheatreID;
+    private Theatre _Theatre;
     private String _StartTime;
     private String _PremiumPrice;
     private String _CheapPrice;
     private String _PerformanceID;
     private static int _PerformanceIDTracker = 1;
 
-    public Performance(String actID, String theatreID, String startTime, String premiumPrice, String cheapPrice, String performanceID) {
-        super(actID);
-        _ActID = actID;
-        _TheatreID = theatreID;
-        _StartTime = startTime;
-        _PremiumPrice = premiumPrice;
-        _CheapPrice = cheapPrice;
-        _PerformanceID = performanceID;
-    }
-
-    public  Performance(String performanceID) {
-        super(null);
-        _PerformanceID = performanceID;
-        _TheatreID = this.getTheatreIDforPerformance();
-    }
-
     public String getPerformanceID() {
         return _PerformanceID;
     }
+
     public String getStartTime() {
         return _StartTime;
     }
 
     public String getActID() {
         return _ActID;
+    }
+
+    public Theatre getTheatre() {
+        return _Theatre;
+    }
+
+    public Performance(String actID, Theatre theatre, String startTime, String premiumPrice, String cheapPrice) {
+        _ActID = actID;
+        _Theatre = theatre;
+        _StartTime = startTime;
+        _PremiumPrice = premiumPrice;
+        _CheapPrice = cheapPrice;
+        _PerformanceID = "PERFORMANCE" + _PerformanceIDTracker;
+        _PerformanceIDTracker++;
     }
 
     public boolean checkDate() throws NullPointerException{
@@ -46,85 +44,14 @@ public class Performance extends Act{
     }
 
     public String getCheapPrice() {
-        for (Performance e: TBSServerImpl.getPerformanceList()) {
-            if (e._PerformanceID.equals(_PerformanceID)) {
-                return e._CheapPrice;
-            }
-        }
-        return null;
+       return _CheapPrice;
     }
 
     public String getPremiumPrice() {
-        for (Performance e: TBSServerImpl.getPerformanceList()) {
-            if (e._PerformanceID.equals(_PerformanceID)) {
-                return e._PremiumPrice;
-            }
-        }
-        return null;
+        return  _PremiumPrice;
     }
 
-    public String addPerformanceToList() {
 
-        String newPerformanceID = "PERFORMANCE" + _PerformanceIDTracker;
-        _PerformanceIDTracker++;
-        this._PerformanceID = newPerformanceID;
-        TBSServerImpl.getPerformanceList().add(this);
-        return this.getPerformanceID();
-    }
 
-    public boolean doesPerformanceExist() {
-        for (Performance e: TBSServerImpl.getPerformanceList()) {
-            if (e.getPerformanceID().equals(_PerformanceID)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    public Theatre getTheatre() {
-        for (Theatre e: TBSServerImpl.getTheatreList()) {
-            if (e.getID().equals(_TheatreID)) {
-                return e;
-            }
-        }
-        return null;
-    }
-
-    public String getTheatreIDforPerformance() {
-        for (Performance e: TBSServerImpl.getPerformanceList()) {
-            if (e._PerformanceID.equals(_PerformanceID)) {
-                return e._TheatreID;
-            }
-        }
-        return null;
-    }
-
-    public boolean doesTheatreForPerformanceExist() {
-        for (Theatre e: TBSServerImpl.getTheatreList()) {
-            if (e.getID().equals(_TheatreID)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static ArrayList<Performance> getPerformancesForAct(String actID) {
-        ArrayList<Performance> performancesForAct = new ArrayList<>();
-        for (Performance e: TBSServerImpl.getPerformanceList()) {
-            if (e.getActID().equals(actID)) {
-                performancesForAct.add(e);
-            }
-        }
-        return performancesForAct;
-    }
-
-    public int[] getTotalSalesReport() {
-        int[] ticketSales = {0,0};
-
-        for (Ticket e: Ticket.getTicketsForPerformance(_PerformanceID)) {
-            ticketSales[0] += Integer.parseInt(e.getTicketPrice().substring(1));
-            ticketSales[1]++;
-        }
-        return ticketSales;
-    }
 }
