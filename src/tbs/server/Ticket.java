@@ -1,12 +1,14 @@
 package tbs.server;
 
+import java.util.UUID;
+
 public class Ticket {
-    private String _TicketID;
-    private Performance _Performance;
-    private String _Price;
-    private int _Row;
-    private  int _Position;
-    private static int _TickerIDTracker = 1;
+    private final String _TicketID;
+    private final Performance _Performance;
+    private final String _Price;
+    private final int _Row;
+    private  final int _Position;
+    //private static int _TickerIDTracker = 1;
 
     public int getRow() {
         return _Row;
@@ -30,8 +32,8 @@ public class Ticket {
         _Performance = performance;
         _Row = row;
         _Position = position;
-        _TicketID = "TICKET" + _TickerIDTracker;
-        _TickerIDTracker++;
+        _TicketID = "TICKET" + UUID.randomUUID();
+        //_TickerIDTracker++;
         if (_Row <= (_Performance.getTheatreRows() / 2)) {
             _Price = _Performance.getPremiumPrice();
         } else {

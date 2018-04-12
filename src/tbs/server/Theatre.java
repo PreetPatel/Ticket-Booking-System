@@ -3,8 +3,8 @@ package tbs.server;
 public class Theatre {
 
     private final String _TheatreID;
-    private int _Rows;
-    private int _FloorArea;
+    private final int _Rows;
+    private final int _FloorArea;
 
     public String getID() {
         return _TheatreID;

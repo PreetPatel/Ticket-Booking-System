@@ -41,49 +41,32 @@ public class TBSServerImpl implements TBSServer {
 
     @Override
     public List<String> getPeformanceIDsForAct(String actID) {
-        ArrayList<String> performanceIDs = new ArrayList<>();
+        List<String> performanceIDs = new ArrayList<>();
         if (actID == null || actID.trim().isEmpty()) {
             performanceIDs.add("ERROR Invalid Act ID");
         } else if (actCollection.getActFromServer(actID) == null) {
             performanceIDs.add("ERROR Act ID does not exist");
         } else {
             //Iterate through all performances and get all performanceIDs for performances with the input actID
-            for (Performance e: performanceCollection.getPerformanceCollection()) {
-                if (e.getActID().equals(actID)) {
-                    performanceIDs.add(e.getPerformanceID());
-                }
-            }
+            performanceIDs =  performanceCollection.getPerformanceIDsForAct(actID);
         }
-        Collections.sort(performanceIDs);
         return performanceIDs;
     }
 
     @Override
     public List<String> getTheatreIDs() {
-        List<String> result = new ArrayList<>();
-        //Iterate through the theatre collection and add Theatre IDs to the String List
-        for (Theatre e: theatreCollection.getTheatreCollection()) {
-            result.add(e.getID());
-        }
-        Collections.sort(result);
-        return result;
+       return theatreCollection.getTheatreIDs();
     }
 
     @Override
     public List<String> getTicketIDsForPerformance(String performanceID) {
-        List<String> TicketIDsForPerformance = new ArrayList<>();
+        List<String> ticketIDsForPerformance = new ArrayList<>();
         if (performanceCollection.getPerformanceFromServer(performanceID) == null) {
-            TicketIDsForPerformance.add("ERROR Performance ID does not exist");
+            ticketIDsForPerformance.add("ERROR Performance ID does not exist");
         } else {
-            //Iterate through the ticket collection and get ticket IDs for all tickets that are created for the performance
-            for (Ticket e : ticketCollection.getTicketCollection()) {
-                if (e.getPerformance().getPerformanceID().equals(performanceID)) {
-                    TicketIDsForPerformance.add(e.getTicketID());
-                }
-            }
+            ticketIDsForPerformance = ticketCollection.getTicketIDsForPerformance(performanceID);
         }
-        Collections.sort(TicketIDsForPerformance);
-        return TicketIDsForPerformance;
+        return ticketIDsForPerformance;
     }
 
     @Override

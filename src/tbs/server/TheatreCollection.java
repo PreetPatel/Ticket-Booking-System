@@ -2,19 +2,13 @@ package tbs.server;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class TheatreCollection {
     private HashSet<Theatre> _TheatreCollection;
 
     public TheatreCollection() {
         _TheatreCollection = new HashSet<>();
-    }
-
-    public Set<Theatre> getTheatreCollection() {
-        return _TheatreCollection;
     }
 
     public boolean add(Theatre theatre) {
@@ -66,5 +60,15 @@ public class TheatreCollection {
             }
         }
         return null;
+    }
+
+    public List<String> getTheatreIDs() {
+        List<String> result = new ArrayList<>();
+        //Iterate through the theatre collection and add Theatre IDs to the String List
+        for (Theatre e: _TheatreCollection) {
+            result.add(e.getID());
+        }
+        Collections.sort(result);
+        return result;
     }
 }

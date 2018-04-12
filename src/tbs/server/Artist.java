@@ -1,15 +1,17 @@
 package tbs.server;
 
+import java.util.UUID;
+
 public class Artist {
 
-    private String _Name;
-    private String _ArtistID;
-    private static int _ArtistIDTracker = 1;
+    private final String _Name;
+    private final String _ArtistID;
+    //private static int _ArtistIDTracker = 1;
 
     public Artist(String name) {
         _Name = name;
-        _ArtistID = "ARTIST" + _ArtistIDTracker;
-        _ArtistIDTracker++;
+        _ArtistID = "ARTIST" + UUID.randomUUID();
+        //_ArtistIDTracker++;
     }
 
     public String getName() {

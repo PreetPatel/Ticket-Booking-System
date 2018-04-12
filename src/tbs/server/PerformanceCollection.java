@@ -1,17 +1,15 @@
 package tbs.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
-public class PerformanceCollection {
+public class PerformanceCollection implements Iterable{
     private List<Performance> _PerformanceCollection;
 
     public  PerformanceCollection() {
         _PerformanceCollection = new ArrayList<>();
-    }
-
-    public List<Performance> getPerformanceCollection() {
-        return _PerformanceCollection;
     }
 
     public boolean add (Performance e) {
@@ -28,6 +26,19 @@ public class PerformanceCollection {
             }
         }
         return performancesForAct;
+    }
+
+    public List<String> getPerformanceIDsForAct(String actID) {
+        List<String> performanceIDsForAct = new ArrayList<>();
+        //Loops through all performances in collection and adds any performance IDs with the matching act ID to the return
+        // list
+        for (Performance e: _PerformanceCollection) {
+            if (e.getActID().equals(actID)) {
+                performanceIDsForAct.add(e.getPerformanceID());
+            }
+        }
+        Collections.sort(performanceIDsForAct);
+        return performanceIDsForAct;
     }
 
     //Returns a specific performance from the performance collection
@@ -48,5 +59,29 @@ public class PerformanceCollection {
             }
         }
         return false;
+    }
+
+    @Override
+    public Iterator<Performance> iterator() {
+        Iterator<Performance> it = new Iterator<>() {
+
+            private int currentIndex = 0;
+
+            @Override
+            public boolean hasNext() {
+                return currentIndex < _PerformanceCollection.size() && _PerformanceCollection.get(currentIndex) != null;
+            }
+
+            @Override
+            public Performance next() {
+                return _PerformanceCollection.get(currentIndex++);
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+        return it;
     }
 }

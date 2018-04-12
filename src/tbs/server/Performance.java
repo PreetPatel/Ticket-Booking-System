@@ -1,13 +1,15 @@
 package tbs.server;
 
+import java.util.UUID;
+
 public class Performance extends PerformanceCollection{
-    private String _ActID;
-    private Theatre _Theatre;
-    private String _StartTime;
-    private String _PremiumPrice;
-    private String _CheapPrice;
-    private String _PerformanceID;
-    private static int _PerformanceIDTracker = 1;
+    private final String _ActID;
+    private final Theatre _Theatre;
+    private final String _StartTime;
+    private final String _PremiumPrice;
+    private final String _CheapPrice;
+    private final String _PerformanceID;
+    //private static int _PerformanceIDTracker = 1;
 
     public String getPerformanceID() {
         return _PerformanceID;
@@ -42,8 +44,8 @@ public class Performance extends PerformanceCollection{
         _StartTime = startTime;
         _PremiumPrice = premiumPrice;
         _CheapPrice = cheapPrice;
-        _PerformanceID = "PERFORMANCE" + _PerformanceIDTracker;
-        _PerformanceIDTracker++;
+        _PerformanceID = "PERFORMANCE" + UUID.randomUUID();
+        //_PerformanceIDTracker++;
     }
     //Checks the input date to match the regex pattern to represent the ISO 8601 standard
     public boolean checkDate() throws NullPointerException{

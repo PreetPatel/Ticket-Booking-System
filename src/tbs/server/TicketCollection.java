@@ -1,6 +1,7 @@
 package tbs.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TicketCollection {
@@ -8,10 +9,6 @@ public class TicketCollection {
 
     public TicketCollection() {
         _TicketCollection = new ArrayList<>();
-    }
-
-    public List<Ticket> getTicketCollection() {
-        return _TicketCollection;
     }
 
     public boolean add(Ticket e) {
@@ -55,6 +52,19 @@ public class TicketCollection {
         return true;
     }
 
+
+    public List<String> getTicketIDsForPerformance(String performanceID) {
+        List<String> ticketIDsForPerformance = new ArrayList<>();
+
+        //Iterate through the ticket collection and get ticket IDs for all tickets that are created for the performance
+        for (Ticket e : _TicketCollection) {
+            if (e.getPerformance().getPerformanceID().equals(performanceID)) {
+                ticketIDsForPerformance.add(e.getTicketID());
+            }
+        }
+        Collections.sort(ticketIDsForPerformance);
+        return ticketIDsForPerformance;
+    }
 
 
 }
