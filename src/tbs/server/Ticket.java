@@ -32,15 +32,28 @@ public class Ticket {
         _Position = position;
         _TicketID = "TICKET" + _TickerIDTracker;
         _TickerIDTracker++;
-        if (_Row <= (_Performance.getTheatre().getRows() / 2)) {
+        if (_Row <= (_Performance.getTheatreRows() / 2)) {
             _Price = _Performance.getPremiumPrice();
         } else {
             _Price = _Performance.getCheapPrice();
         }
     }
-
+    //Checks to see if the row and position specified for the ticket actually exist by comparing them to the maximum
+    // row size for the theatre
     public  boolean isSeatValid() {
-        int maxRows = _Performance.getTheatre().getRows();
+        int maxRows = _Performance.getTheatreRows();
         return _Row <= maxRows && _Position <= maxRows && _Row > 0 && _Position > 0;
+    }
+
+    //Overridden methods for checking equality in objects
+    @Override
+    public boolean equals(Object obj) {
+        Ticket a = (Ticket) obj;
+        return (_Position == a.getPosition()) && (_Row == a.getRow()) && (_Performance.getPerformanceID().equals(a.getPerformance().getPerformanceID()));
+    }
+
+    @Override
+    public int hashCode() {
+        return 1;
     }
 }

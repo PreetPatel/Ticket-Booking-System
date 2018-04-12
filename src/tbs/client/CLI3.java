@@ -16,6 +16,11 @@ public class CLI3 {
 		String result = server.initialise(path);
 		System.out.println("Result from initialisation is {" + result + "}");  // Put in { } to make empty strings easier to see.
 		System.out.println("\n");
+
+		TBSServer server2 = new TBSServerImpl();
+		String result2 = server2.initialise(null);
+		System.out.println("Result from initialisation is {" + result2 + "}");  // Put in { } to make empty strings easier to see.
+		System.out.println("\n");
 		
 		////////////////////////////////////// addArtist //////////////////////////////////////////////
 		
@@ -113,6 +118,13 @@ public class CLI3 {
 		System.out.println("Result from adding act to artist 'Ewan' is {" + actID6 + "}");
 		if (actID6.contains("ERROR")) System.out.println("PASSED"); else { System.out.println("FAILED");counter++;}
 		System.out.println("\n");
+
+		// Title is null, should fail
+		String actID11 = server.addAct("LAla", null, 50);
+		System.out.println("Expected: Artist is null");
+		System.out.println("Result from adding act to artist 'Ewan' is {" + actID11 + "}");
+		if (actID11.contains("ERROR")) System.out.println("PASSED"); else { System.out.println("FAILED");counter++;}
+		System.out.println("\n");
 		
 		// No errors, act should add
 		String actID7 = server.addAct("Lecture 3b: Making Objects", artistID1, 50);
@@ -179,6 +191,13 @@ public class CLI3 {
 		System.out.println("Result from scheduling performance to " + actID7 + " is {" + schedule1 + "}");
 		if (schedule1.contains("ERROR")) {  System.out.println("FAILED");counter++;} else System.out.println("PASSED");
 		System.out.println("\n");
+
+		// Duplicate Performance, fails
+		String schedule21 = server.schedulePerformance(actID7, "T1", "2084-39-93T18:27", "$50", "$25");
+		System.out.println("Expected: Performance Aready Exists");
+		System.out.println("Result from scheduling performance to " + actID7 + " is {" + schedule21 + "}");
+		if (schedule21.contains("ERROR")) System.out.println("PASSED"); else {  System.out.println("FAILED");counter++;}
+		System.out.println("\n");
 		
 		// Act ID is empty, fails
 		String schedule2 = server.schedulePerformance("", "T1", "2084-39-93T18:27", "$50", "$25");
@@ -242,7 +261,7 @@ public class CLI3 {
 		System.out.println("Result from scheduling performance to " + actID9 + " is {" + schedule10 + "}");
 		if (schedule10.contains("ERROR")) System.out.println("PASSED"); else { System.out.println("FAILED");counter++;}
 		System.out.println("\n");
-		
+
 		// Price is null
 		String schedule11 = server.schedulePerformance(actID9, "T1", "2084-39-93T18:27", "$50", null);
 		System.out.println("Expected: Price is null");
@@ -270,8 +289,21 @@ public class CLI3 {
 		System.out.println("Result from scheduling performance to " + actID9 + " is {" + schedule14 + "}");
 		if (schedule12.contains("ERROR")) System.out.println("PASSED"); else { System.out.println("FAILED");counter++;}
 		System.out.println("\n");
-		
-		
+
+		String schedule15 = server.schedulePerformance(actID9, "T1", "", "$50", "$25");
+		System.out.println("Expected: Start Time Invalid");
+		System.out.println("Result from scheduling performance to " + actID9 + " is {" + schedule15 + "}");
+		if (schedule15.contains("ERROR")) System.out.println("PASSED"); else { System.out.println("FAILED");counter++;}
+		System.out.println("\n");
+
+		String schedule16 = server.schedulePerformance(actID9, "T1", "2084-39-93T18:27", "50", "$25");
+		System.out.println("Expected: Price Invalid");
+		System.out.println("Result from scheduling performance to " + actID9 + " is {" + schedule16 + "}");
+		if (schedule16.contains("ERROR")) System.out.println("PASSED"); else { System.out.println("FAILED");counter++;}
+		System.out.println("\n");
+
+
+
 		/////////////////////////////////// getActIDsForArtist //////////////////////////////////////////////
 		
 		// Should return list of act IDs
@@ -400,7 +432,7 @@ public class CLI3 {
 		System.out.println("\n");
 		
 		// Seat doesn't exist, fails
-		String tick6 = server.issueTicket(schedule1, 0, 7);
+		String tick6 = server.issueTicket(schedule1, -3, 7);
 		System.out.println("Expected: Seat doesn't exist");
 		System.out.println(tick6);
 		if (tick6.contains("ERROR")) System.out.println("PASSED"); else { System.out.println("FAILED");counter++;}
@@ -491,6 +523,13 @@ public class CLI3 {
 		System.out.println("Expected: Performance ID doesn't exist");
 		System.out.println(freeSeats6);
 		if (freeSeats6.get(0).contains("ERROR")) System.out.println("PASSED"); else { System.out.println("FAILED");counter++;}
+		System.out.println("\n");
+
+		// Performance ID is null, fails
+		List<String> freeSeats7 = server.seatsAvailable(null);
+		System.out.println("Expected: Performance ID doesn't exist");
+		System.out.println(freeSeats7);
+		if (freeSeats7.get(0).contains("ERROR")) System.out.println("PASSED"); else { System.out.println("FAILED");counter++;}
 		System.out.println("\n");
 
 		

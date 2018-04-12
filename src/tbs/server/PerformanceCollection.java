@@ -20,6 +20,8 @@ public class PerformanceCollection {
 
     public ArrayList<Performance> getPerformancesForAct(String actID) {
         ArrayList<Performance> performancesForAct = new ArrayList<>();
+        //Loops through all performances in collection and adds any performance with the matching act ID to the return
+        // list
         for (Performance e: _PerformanceCollection) {
             if (e.getActID().equals(actID)) {
                 performancesForAct.add(e);
@@ -28,6 +30,7 @@ public class PerformanceCollection {
         return performancesForAct;
     }
 
+    //Returns a specific performance from the performance collection
     public Performance getPerformanceFromServer(String performanceID) {
         for (Performance e: _PerformanceCollection) {
             if (e.getPerformanceID().equals(performanceID)) {
@@ -35,5 +38,15 @@ public class PerformanceCollection {
             }
         }
         return null;
+    }
+
+    //Checks if a performance exists already in the collection list
+    public boolean DoesPerformanceExist(Performance o) {
+        for (Performance e: getPerformancesForAct(o.getActID())) {
+            if (e.getTheatreID().equals(o.getTheatreID()) && e.getStartTime().equals(o.getStartTime())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

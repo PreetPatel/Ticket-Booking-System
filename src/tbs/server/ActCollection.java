@@ -1,6 +1,7 @@
 package tbs.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ActCollection {
@@ -8,10 +9,6 @@ public class ActCollection {
 
     public ActCollection() {
         _ActCollection = new ArrayList<>();
-    }
-
-    public List<Act> getActCollection() {
-        return _ActCollection;
     }
 
     public boolean add (Act e) {
@@ -27,14 +24,26 @@ public class ActCollection {
         return null;
     }
 
-    public boolean doesSameActByArtistExist(String artistID, String title) {
+    public boolean doesActExistInServer(String artistID, String title) {
             for (Act e : _ActCollection) {
-                if (e.getArtistIDForAct().equals(artistID)) {
+                if (e.getArtistForAct().getArtistID().equals(artistID)) {
                     if (e.getTitle().equals(title)) {
                         return true;
                     }
                 }
             }
             return false;
+    }
+    //Loops though all acts and adds Act Ids for all acts that match the specified artistID
+    public List<String> getActIdsForArtist(String artistID) {
+        List<String> actIDsForArtist = new ArrayList<>();
+        for(Act e: _ActCollection) {
+            if (e.getArtistForAct().getArtistID().equals(artistID)) {
+                actIDsForArtist.add(e.getActID());
+            }
+        }
+        //Sorts the list by alphabetical order
+        Collections.sort(actIDsForArtist);
+        return actIDsForArtist;
     }
 }

@@ -1,56 +1,42 @@
 package tbs.server;
 
-import java.util.*;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class TBSServerImpl implements TBSServer {
 
-    private TheatreCollection Theatres = new TheatreCollection();
-    private ArtistCollection Artists = new ArtistCollection();
-    private ActCollection Acts = new ActCollection();
-    private PerformanceCollection Performances = new PerformanceCollection();
-    private TicketCollection Tickets = new TicketCollection();
+    private TheatreCollection theatreCollection = new TheatreCollection();
+    private ArtistCollection artistCollection = new ArtistCollection();
+    private ActCollection actCollection = new ActCollection();
+    private PerformanceCollection performanceCollection = new PerformanceCollection();
+    private TicketCollection ticketCollection = new TicketCollection();
 
     @Override
     public List<String> getActIDsForArtist(String artistID) {
         List<String> actIDforArtist = new ArrayList<>();
-        if (Artists.doesNotExistInServer(artistID)) {
+        //If there is no artist for the specified ID, the getArtistFromServer method returns null
+        if (artistCollection.getArtistFromServer(artistID) == null) {
             actIDforArtist.add("ERROR Artist does not exist");
+            return actIDforArtist;
         } else {
-            for(Act e: Acts.getActCollection()) {
-                if (e.getArtistIDForAct().equals(artistID)) {
-                    actIDforArtist.add(e.getActID());
-                }
-            }
+          return  actCollection.getActIdsForArtist(artistID);
         }
-        return actIDforArtist;
     }
 
     @Override
     public List<String> dump() {
-        List<String> dump = new ArrayList<>();
-       return dump;
+        return new ArrayList<>();
     }
 
     @Override
     public List<String> getArtistIDs() {
-        List<String> results = new ArrayList<>();
-        for (Artist e: Artists.getArtistCollection()) {
-            results.add(e.getArtistID());
-        }
-        Collections.sort(results);
-        return results;
+        return artistCollection.getAllArtistIDs();
     }
 
     @Override
     public List<String> getArtistNames() {
-        List<String> results = new ArrayList<>();
-        for (Artist e: Artists.getArtistCollection()) {
-            results.add(e.getName());
-        }
-        Collections.sort(results);
-        return results;
+        return artistCollection.getAllArtistNames();
     }
 
     @Override
@@ -58,10 +44,11 @@ public class TBSServerImpl implements TBSServer {
         ArrayList<String> performanceIDs = new ArrayList<>();
         if (actID == null || actID.trim().isEmpty()) {
             performanceIDs.add("ERROR Invalid Act ID");
-        } else if (Acts.getActFromServer(actID) == null) {
+        } else if (actCollection.getActFromServer(actID) == null) {
             performanceIDs.add("ERROR Act ID does not exist");
         } else {
-            for (Performance e: Performances.getPerformanceCollection()) {
+            //Iterate through all performances and get all performanceIDs for performances with the input actID
+            for (Performance e: performanceCollection.getPerformanceCollection()) {
                 if (e.getActID().equals(actID)) {
                     performanceIDs.add(e.getPerformanceID());
                 }
@@ -74,7 +61,8 @@ public class TBSServerImpl implements TBSServer {
     @Override
     public List<String> getTheatreIDs() {
         List<String> result = new ArrayList<>();
-        for (Theatre e: Theatres.getTheatreCollection()) {
+        //Iterate through the theatre collection and add Theatre IDs to the String List
+        for (Theatre e: theatreCollection.getTheatreCollection()) {
             result.add(e.getID());
         }
         Collections.sort(result);
@@ -84,10 +72,11 @@ public class TBSServerImpl implements TBSServer {
     @Override
     public List<String> getTicketIDsForPerformance(String performanceID) {
         List<String> TicketIDsForPerformance = new ArrayList<>();
-        if (Performances.getPerformanceFromServer(performanceID) == null) {
+        if (performanceCollection.getPerformanceFromServer(performanceID) == null) {
             TicketIDsForPerformance.add("ERROR Performance ID does not exist");
         } else {
-            for (Ticket e : Tickets.getTicketCollection()) {
+            //Iterate through the ticket collection and get ticket IDs for all tickets that are created for the performance
+            for (Ticket e : ticketCollection.getTicketCollection()) {
                 if (e.getPerformance().getPerformanceID().equals(performanceID)) {
                     TicketIDsForPerformance.add(e.getTicketID());
                 }
@@ -100,12 +89,15 @@ public class TBSServerImpl implements TBSServer {
     @Override
     public List<String> salesReport(String actID) {
         ArrayList<String> salesReport = new ArrayList<>();
-        if (Acts.getActFromServer(actID) == null) {
+        if (actCollection.getActFromServer(actID) == null) {
             salesReport.add("ERROR Act does not exist");
         } else {
-            for (Performance e : Performances.getPerformancesForAct(actID)) {
-                int[] sales = Tickets.getTotalSalesReport(e.getPerformanceID());
-                salesReport.add(e.getPerformanceID() + "\t" + e.getStartTime() + "\t" + sales[1] + "\t" + "$" + sales[0]);
+            for (Performance e : performanceCollection.getPerformancesForAct(actID)) {
+                //Iterate through all performances for the actID and get number of ticket sales and total revenue
+                String ticketSales = ticketCollection.getTicketSalesForPerformance(e.getPerformanceID());
+                //Append the Performance ID and start time for the performance to the sales Report string
+                ticketSales = e.getPerformanceID() + "\t" + e.getStartTime() + "\t" + ticketSales;
+                salesReport.add(ticketSales);
             }
         }
         return salesReport;
@@ -114,13 +106,16 @@ public class TBSServerImpl implements TBSServer {
     @Override
     public List<String> seatsAvailable(String performanceID) {
         List<String> seatsAvailable = new ArrayList<>();
-        Performance checkPerformance = Performances.getPerformanceFromServer(performanceID);
+        Performance checkPerformance = performanceCollection.getPerformanceFromServer(performanceID);
         if (checkPerformance != null) {
-            int rows = checkPerformance.getTheatre().getRows();
+            //Iterate through all possible seats for a given performance
+            int rows = checkPerformance.getTheatreRows();
             for (int i = 1; i <= rows; i++) {
                 for (int j = 1; j <= rows; j++) {
-                    Ticket checkTicket = new Ticket(Performances.getPerformanceFromServer(performanceID),i,j);
-                    if (Tickets.isTicketAvailable(checkTicket)) {
+                    Ticket checkTicket = new Ticket(performanceCollection.getPerformanceFromServer(performanceID),i,j);
+                    //Check if the seat for the temporary created ticket is available and add to the list of available
+                    //seats if it is
+                    if (ticketCollection.isAvailable(checkTicket)) {
                         seatsAvailable.add(i + "\t" + j);
                     }
                 }
@@ -133,20 +128,21 @@ public class TBSServerImpl implements TBSServer {
 
     @Override
     public String addAct(String title, String artistID, int minutesDuration) {
-
+        //Error checking for input parameters or if the artist exists in the system
         if (artistID == null) {
             return "ERROR Invalid ArtistID";
-        } else if (Artists.doesNotExistInServer(artistID)) {
+        } else if (artistCollection.getArtistFromServer(artistID) == null) {
             return "ERROR Artist does not exist";
         } else if (minutesDuration <= 0) {
             return "ERROR Invalid format for act duration";
         } else if (title == null || title.trim().isEmpty()) {
             return "ERROR: Title is invalid";
-        } else if (Acts.doesSameActByArtistExist(artistID,title)) {
+        } else if (actCollection.doesActExistInServer(artistID,title)) {
             return "ERROR Act by this artist already exists";
         } else {
-            Act newAct = new Act(title,artistID,minutesDuration);
-            Acts.add(newAct);
+            //Create an act object and add it to the act collection
+            Act newAct = new Act(title, artistCollection.getArtistFromServer(artistID),minutesDuration);
+            actCollection.add(newAct);
             return newAct.getActID();
         }
     }
@@ -157,34 +153,34 @@ public class TBSServerImpl implements TBSServer {
         if (name == null || name.trim().isEmpty()) {
             return "ERROR Invalid Name";
         } else {
-            if(Artists.add(newArtist)) {
+            if(artistCollection.add(newArtist)) {
                 return newArtist.getArtistID();
             } else {
                 return "ERROR This Artist Already exists";
             }
         }
-
     }
 
     @Override
     public String initialise(String path) {
-        File file = new File(path);
-       return Theatres.addTheatreFromFile(file);
+       return theatreCollection.addTheatreFromPath(path);
     }
 
     @Override
     public String issueTicket(String performanceID, int rowNumber, int seatNumber) {
 
-            if (Performances.getPerformanceFromServer(performanceID) == null) {
+            //Check if the performance exists in the server
+            if (performanceCollection.getPerformanceFromServer(performanceID) == null) {
                 return "ERROR Performance does not exist";
             }
-            Ticket newTicket = new Ticket(Performances.getPerformanceFromServer(performanceID), rowNumber, seatNumber);
+            //Create a new ticket object and check its validity and if it is available for sale
+            Ticket newTicket = new Ticket(performanceCollection.getPerformanceFromServer(performanceID), rowNumber, seatNumber);
             if (!newTicket.isSeatValid()) {
                 return "ERROR Seat is not valid";
-            } else if (!Tickets.isTicketAvailable(newTicket)) {
+            } else if (!ticketCollection.isAvailable(newTicket)) {
                 return "ERROR Seat is not available";
             } else {
-                Tickets.add(newTicket);
+                ticketCollection.add(newTicket);
                 return newTicket.getTicketID();
             }
     }
@@ -193,21 +189,26 @@ public class TBSServerImpl implements TBSServer {
     public String schedulePerformance(String actID, String theatreID, String startTimeStr, String premiumPriceStr, String cheapSeatsStr) {
 
        try {
-           if (Acts.getActFromServer(actID) == null) {
+           //Check if the act and theatre exist for the performance
+           if (actCollection.getActFromServer(actID) == null) {
                return "ERROR Act with the specified Act ID does not exist.";
-           } else if (Theatres.getTheatreFromServer(theatreID) == null) {
+           } else if (theatreCollection.getTheatreFromServer(theatreID) == null) {
                return "ERROR Theatre does not exist";
            }
-           Theatre theatre = Theatres.getTheatreFromServer(theatreID);
+           //Create a new performance object and validate all of its inputs such as time, price, etc..
+           Theatre theatre = theatreCollection.getTheatreFromServer(theatreID);
            Performance newPerformance = new Performance(actID,theatre,startTimeStr,premiumPriceStr,cheapSeatsStr);
            if (!newPerformance.checkDate()) {
                return "ERROR Date is in the wrong format. Format expected(IS0 8601): yyyy-mm-ddThh:mm";
            } else if (!newPerformance.checkPrices()) {
                return "ERROR Prices are not in correct format.";
+           } else if (performanceCollection.DoesPerformanceExist(newPerformance)){
+               return "ERROR Performance already exists";
            } else {
-               Performances.add(newPerformance);
+               performanceCollection.add(newPerformance);
                return newPerformance.getPerformanceID();
            }
+           //The catch statement ensures to report an error if any of the input parameters are null
        } catch (NullPointerException e) {
            return "ERROR An input field is null";
        }

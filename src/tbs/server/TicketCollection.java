@@ -18,15 +18,7 @@ public class TicketCollection {
        return _TicketCollection.add(e);
     }
 
-    public boolean isTicketAvailable(Ticket checkTicket) {
-        for (Ticket e: _TicketCollection) {
-            if ((e.getPosition() == checkTicket.getPosition()) && (e.getRow() == checkTicket.getRow()) && (e.getPerformance().getPerformanceID().equals(checkTicket.getPerformance().getPerformanceID()))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
+    //Loops through all tickets in the collection and returns a tickets list for a performanceID
     public ArrayList<Ticket> getTicketsForPerformance(String performanceID) {
         ArrayList<Ticket> ticketsForPerformance = new ArrayList<>();
         for (Ticket e: _TicketCollection) {
@@ -37,15 +29,32 @@ public class TicketCollection {
         return ticketsForPerformance;
     }
 
-    public int[] getTotalSalesReport(String performanceID) {
+    //Loops through all tickets in the collection and increments the first element by the price of the ticket and the
+    // second element is incremented as a counter for the number of tickets
+    public String getTicketSalesForPerformance(String performanceID) {
+        //Integer array used to store the values
         int[] ticketSales = {0,0};
 
         for (Ticket e: getTicketsForPerformance(performanceID)) {
             ticketSales[0] += Integer.parseInt(e.getTicketPrice().substring(1));
             ticketSales[1]++;
         }
-        return ticketSales;
+
+        //Return correctly formatted string
+        return ticketSales[1] + "\t" + "$" + ticketSales[0];
     }
+
+    //Loops through all tickets to check if it includes the new ticket and returns false if it does which means that
+    // there is a ticket already purchased for that seat. Else returns true.
+    public boolean isAvailable(Ticket checkTicket) {
+        for (Ticket e: _TicketCollection) {
+            if (e.equals(checkTicket)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 
 }

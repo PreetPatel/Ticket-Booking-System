@@ -20,6 +20,7 @@ public class Artist {
         return _ArtistID;
     }
 
+    //Overridden methods for checking equality in objects
     @Override
     public boolean equals(Object obj) {
         Artist a = (Artist)obj;
